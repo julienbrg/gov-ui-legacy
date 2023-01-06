@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,11 +22,11 @@ export default function Home() {
             {/* <code className={styles.code}>https://github.com/w3hc/gov</code> */}
           </p>
           <div>
-            <a
-              href="https://github.com/w3hc"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <Link
+            href="/"
+            className={styles.card}
+            
+          >
               By{' '}
               {/* <Image
                 src="/vercel.svg"
@@ -36,7 +37,7 @@ export default function Home() {
                 priority
               /> */}
               W3HC
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -76,9 +77,10 @@ export default function Home() {
             </p>
           </a> */}
 
-          <a
+          <Link
             href="/activity"
             className={styles.card}
+            
           >
             <h2 className={inter.className}>
               Activity <span>-&gt;</span>
@@ -86,7 +88,7 @@ export default function Home() {
             <p className={inter.className}>
               What&apos;s happening in your DAO?
             </p>
-          </a>
+            </Link>
 
           {/* <a
             href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
