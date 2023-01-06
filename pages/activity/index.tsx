@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
+import styles from '../../styles/Home.module.css'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -76,17 +77,18 @@ export default function Home() {
             </p>
           </a> */}
 
-          <a
-            href="/activity"
+          <Link
+            href="/"
             className={styles.card}
+            
           >
             <h2 className={inter.className}>
-              Activity <span>-&gt;</span>
+              Home <span>-&gt;</span>
             </h2>
             <p className={inter.className}>
-              What&apos;s happening in your DAO?
+              What&apos;s happening on your homepage?
             </p>
-          </a>
+          </Link>
 
           {/* <a
             href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
