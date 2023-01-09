@@ -16,9 +16,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className={styles.description}>
+      <div className={styles.description}>
           <p>
-            Gov
+          <a
+              href="https://github.com/w3hc/gov"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Gov
+          </a>
           </p>
           <div>
             <a
@@ -26,13 +31,12 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {' '}
             </a>
           </div>
         </div>
 
         <div className={inter.className}>
-          Hello world!
+          [ Your activity ]
         </div>
 
         <div className={styles.grid}>

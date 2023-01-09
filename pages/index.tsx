@@ -18,7 +18,12 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            Gov
+          <a
+              href="https://github.com/w3hc/gov"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Gov
+          </a>
           </p>
           <div>
             <a
@@ -31,7 +36,7 @@ export default function Home() {
         </div>
 
         <div className={inter.className}>
-          Hello world!
+          Hello DAO!
         </div>
 
         <div className={styles.grid}>
