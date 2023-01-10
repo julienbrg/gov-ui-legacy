@@ -10,30 +10,58 @@ const inter = Inter({ subsets: ['latin'] })
 
 const endpoint = process.env.NEXT_PUBLIC_ENDPOINT;
 const provider = new ethers.providers.JsonRpcProvider(endpoint);
-// const signer = provider.getSigner()
 const contractAddress = "0x690C775dD85365a0b288B30c338ca1E725abD50E";
+const gov = new ethers.Contract(contractAddress, abi, provider);
+const baseUrl = "https://www.tally.xyz/gov/girlygov-64/proposal/"
 
 export default function Home() {
   const [block, setBlock] = useState(0);
   const [manifesto, setManifesto] = useState("");
+  const [proposal, setProposal] = useState<[{id:string; link:string}]>([{
+    id: "0",
+    link: "http://link.com"
+  }]);
 
   const getBlock = async () => {
     const blockNumber = await provider.getBlockNumber();
-    console.log("block:", blockNumber);
     setBlock(blockNumber);
   }
 
   const getManifesto = async () => {
-    // console.log("abi:", abi);
-    const gov = new ethers.Contract(contractAddress, abi, provider);
     const getManifesto = await gov.manifesto();
     setManifesto(getManifesto);
+  }
+
+  const getProposals = async () => {
+    if (block > 1) {
+      const proposals = await gov.queryFilter("ProposalCreated", 8251080, block);
+      try {
+
+        let i:number = 0;
+        let proposalsRaw = proposal;
+
+        if (proposals[0].args != undefined) {
+          for( i; i < Number(proposals.length) ; i++) {
+            console.log("executed")
+            proposalsRaw.push(...[{
+              id: String(proposals[i].args?.proposalId), 
+              link: baseUrl + String(proposals[i].args?.proposalId)
+            }])
+          }
+          setProposal(proposalsRaw)          
+        }
+      } catch(error) {
+        console.log("error:", error)
+      }
+    }
   }
 
   useEffect(() => {
     getBlock();
     getManifesto();
-  },[]);
+    getProposals();
+    console.log("proposal:", proposal);
+  });
 
   return (
     <>
@@ -66,9 +94,12 @@ export default function Home() {
         <div className={inter.className}>
   
           <p>Current block number: <strong>{block}</strong></p><br />
-          <p>Gov contract address: <strong><a href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
-          <p>Manifesto: <a href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/"><strong>{manifesto}</strong></a></p>
-          
+          <p>Gov contract address: <strong><a target="_blank" rel="noopener noreferrer" href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
+          <p>Manifesto: <a target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/manifesto.md"><strong>{manifesto}</strong></a></p><br />
+          <h3>Latest proposal</h3><br />
+          <a target="_blank" rel="noopener noreferrer" href="https://www.tally.xyz/gov/girlygov-64/proposal/95129343070641600225540803920375046071595778808183352464012422526749827081032"><strong>95129343070641600225540803920375046071595778808183352464012422526749827081032</strong></a><br />
+          <br /><h3>All proposals </h3><br />
+          <p>...</p>        
         </div>
 
         <div className={styles.grid}>
