@@ -33,7 +33,7 @@ export default function Home() {
     // TODO: Get an array of all active proposals
     // https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#events
 
-    const filter = gov.filters.ProposalCreated(null)
+    const filter = gov.filters.ProposalCreated()
     console.log("topic:", filter.topics)
 
   }
@@ -76,7 +76,7 @@ export default function Home() {
   
           <p>Current block number: <strong>{block}</strong></p><br />
           <p>Gov contract address: <strong><a target="_blank" rel="noopener noreferrer" href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
-          <p>Manifesto: <a target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/"><strong>{manifesto}</strong></a></p><br />
+          <p>Manifesto: <a target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/manifesto.md"><strong>{manifesto}</strong></a></p><br />
           <p>Latest proposal: <a target="_blank" rel="noopener noreferrer" href="https://www.tally.xyz/gov/girlygov-64/proposal/95129343070641600225540803920375046071595778808183352464012422526749827081032"><strong>95129...81032</strong></a></p>
 
         </div>
