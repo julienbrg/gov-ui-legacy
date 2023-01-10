@@ -4,16 +4,18 @@ import styles from '../../styles/Home.module.css'
 import Link from 'next/link'
 import { ethers } from "ethers";
 import { useState, useEffect } from "react";
+import { abi } from "../../constants/abi";
 
 const inter = Inter({ subsets: ['latin'] })
 
 const endpoint = process.env.NEXT_PUBLIC_ENDPOINT;
 const provider = new ethers.providers.JsonRpcProvider(endpoint);
 // const signer = provider.getSigner()
+const contractAddress = "0x690C775dD85365a0b288B30c338ca1E725abD50E";
 
 export default function Home() {
-
   const [block, setBlock] = useState(0);
+  const [manifesto, setManifesto] = useState("");
 
   const getBlock = async () => {
     const blockNumber = await provider.getBlockNumber();
@@ -21,8 +23,16 @@ export default function Home() {
     setBlock(blockNumber);
   }
 
+  const getManifesto = async () => {
+    // console.log("abi:", abi);
+    const gov = new ethers.Contract(contractAddress, abi, provider);
+    const getManifesto = await gov.manifesto();
+    setManifesto(getManifesto);
+  }
+
   useEffect(() => {
     getBlock();
+    getManifesto();
   },[]);
 
   return (
@@ -54,7 +64,11 @@ export default function Home() {
         </div>
         
         <div className={inter.className}>
-          Current block number: {block}
+  
+          <p>Current block number: <strong>{block}</strong></p><br />
+          <p>Gov contract address: <strong><a href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
+          <p>Manifesto: <a href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/"><strong>{manifesto}</strong></a></p>
+          
         </div>
 
         <div className={styles.grid}>
