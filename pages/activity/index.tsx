@@ -3,8 +3,18 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../../styles/Home.module.css'
 import Link from 'next/link'
+import { ethers } from "ethers";
 
 const inter = Inter({ subsets: ['latin'] })
+
+const endpoint = process.env.NEXT_PUBLIC_ENDPOINT;
+const provider = new ethers.providers.JsonRpcProvider(endpoint);
+// const signer = provider.getSigner()
+
+const getBlock = async () => {
+  const blockNumber = await provider.getBlockNumber();
+  console.log("current block:", blockNumber);
+}
 
 export default function Home() {
   return (
@@ -34,9 +44,9 @@ export default function Home() {
             </a>
           </div>
         </div>
-
+        
         <div className={inter.className}>
-          [ Your activity ]
+          <button onClick={() => getBlock()}>Get block</button>
         </div>
 
         <div className={styles.grid}>
