@@ -1,9 +1,9 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../../styles/Home.module.css'
 import Link from 'next/link'
 import { ethers } from "ethers";
+import { useState, useEffect } from "react";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,12 +11,20 @@ const endpoint = process.env.NEXT_PUBLIC_ENDPOINT;
 const provider = new ethers.providers.JsonRpcProvider(endpoint);
 // const signer = provider.getSigner()
 
-const getBlock = async () => {
-  const blockNumber = await provider.getBlockNumber();
-  console.log("current block:", blockNumber);
-}
-
 export default function Home() {
+
+  const [block, setBlock] = useState(0);
+
+  const getBlock = async () => {
+    const blockNumber = await provider.getBlockNumber();
+    console.log("block:", blockNumber);
+    setBlock(blockNumber);
+  }
+
+  useEffect(() => {
+    getBlock();
+  },[]);
+
   return (
     <>
       <Head>
@@ -46,7 +54,7 @@ export default function Home() {
         </div>
         
         <div className={inter.className}>
-          <button onClick={() => getBlock()}>Get block</button>
+          Current block number: {block}
         </div>
 
         <div className={styles.grid}>
