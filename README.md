@@ -17,7 +17,6 @@ yarn dev
 ## Latest build
 
 - Netlify: [https://gov-ui.netlify.app](https://gov-ui.netlify.app)
-- IPFS: [bafybeigywkmwnpcfwaww425v34k4ivwnnqyxuzgvzfpsdljt7k5loqvtnm](https://bafybeigywkmwnpcfwaww425v34k4ivwnnqyxuzgvzfpsdljt7k5loqvtnm.ipfs.w3s.link)
 
 ## Support
 

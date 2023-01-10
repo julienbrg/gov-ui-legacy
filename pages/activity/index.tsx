@@ -10,8 +10,8 @@ const inter = Inter({ subsets: ['latin'] })
 
 const endpoint = process.env.NEXT_PUBLIC_ENDPOINT;
 const provider = new ethers.providers.JsonRpcProvider(endpoint);
-// const signer = provider.getSigner()
 const contractAddress = "0x690C775dD85365a0b288B30c338ca1E725abD50E";
+const gov = new ethers.Contract(contractAddress, abi, provider);
 
 export default function Home() {
   const [block, setBlock] = useState(0);
@@ -24,15 +24,24 @@ export default function Home() {
   }
 
   const getManifesto = async () => {
-    // console.log("abi:", abi);
-    const gov = new ethers.Contract(contractAddress, abi, provider);
     const getManifesto = await gov.manifesto();
     setManifesto(getManifesto);
+  }
+
+  const getProposals = async () => {
+
+    // TODO: Get an array of all active proposals
+    // https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#events
+
+    const filter = gov.filters.ProposalCreated(null)
+    console.log("topic:", filter.topics)
+
   }
 
   useEffect(() => {
     getBlock();
     getManifesto();
+    getProposals();
   },[]);
 
   return (
@@ -66,9 +75,10 @@ export default function Home() {
         <div className={inter.className}>
   
           <p>Current block number: <strong>{block}</strong></p><br />
-          <p>Gov contract address: <strong><a href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
-          <p>Manifesto: <a href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/"><strong>{manifesto}</strong></a></p>
-          
+          <p>Gov contract address: <strong><a target="_blank" rel="noopener noreferrer" href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
+          <p>Manifesto: <a target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/"><strong>{manifesto}</strong></a></p><br />
+          <p>Latest proposal: <a target="_blank" rel="noopener noreferrer" href="https://www.tally.xyz/gov/girlygov-64/proposal/95129343070641600225540803920375046071595778808183352464012422526749827081032"><strong>95129...81032</strong></a></p>
+
         </div>
 
         <div className={styles.grid}>
