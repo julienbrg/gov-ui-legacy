@@ -2,9 +2,11 @@ import Head from 'next/head'
 import { Inter } from '@next/font/google'
 import styles from '../../styles/Home.module.css'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ethers } from "ethers";
 import { useState, useEffect, useCallback } from "react";
 import { abi } from "../../constants/abi";
+import loader from '../../public/loader.svg';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -72,7 +74,7 @@ export default function Home() {
   },[getProposals, proposal]);
 
   function Item(props) {
-    return <p><strong><a target="_blank" rel="noopener noreferrer" href = {props.link}>{props.id}</a></strong></p>
+    return <p><strong><a style={{color:"#45a2f8"}} target="_blank" rel="noopener noreferrer" href = {props.link}>{props.id}</a></strong></p>
   } 
   
   function List() {
@@ -110,28 +112,22 @@ export default function Home() {
             </a>
           </div>
         </div>
+
+        {initialized === true ? <>
         
         <div className={inter.className}>
   
           <p>Current block number: <strong>{block}</strong></p><br />
-          <p>Gov contract address: <strong><a target="_blank" rel="noopener noreferrer" href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
-          <p>Manifesto: <a target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/manifesto.md"><strong>{manifesto}</strong></a></p><br />
+          <p>Gov contract address: <strong><a style={{color:"#45a2f8"}} target="_blank" rel="noopener noreferrer" href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
+          <p>Manifesto: <a style={{color:"#45a2f8"}} target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/manifesto.md"><strong>{manifesto}</strong></a></p><br />
           
-          <h3>All proposals </h3>
-
-          {initialized === true ? 
-          
-          <div>
-
-          <br /> 
+          <h3>All proposals </h3><br />
 
           <List />
+          
+        </div></>
 
-          </div>
-
-          : <p>Not initialized yet</p> } 
-
-        </div>
+        : <Image src = {loader} alt="loader" priority={true}/> }
 
         <div className={styles.grid}>
           <Link
