@@ -2,9 +2,11 @@ import Head from 'next/head'
 import { Inter } from '@next/font/google'
 import styles from '../../styles/Home.module.css'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ethers } from "ethers";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { abi } from "../../constants/abi";
+import loader from '../../public/loader.svg';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,11 +19,17 @@ const baseUrl = "https://www.tally.xyz/gov/girlygov-64/proposal/"
 export default function Home() {
   const [block, setBlock] = useState(0);
   const [manifesto, setManifesto] = useState("");
-  const [proposal, setProposal] = useState<[{id:string; link:string}]>([{
-    id: "0",
+  const [proposal, setProposal] = useState<{id:string; link:string}[]>([{
+    id: "12345678",
     link: "http://link.com"
-  }]);
+  },]);
+  const [initialized, setInitialized] = useState(false);
 
+  useEffect(() => {
+    getBlock();
+    getManifesto();
+  },[]);
+  
   const getBlock = async () => {
     const blockNumber = await provider.getBlockNumber();
     setBlock(blockNumber);
@@ -32,7 +40,7 @@ export default function Home() {
     setManifesto(getManifesto);
   }
 
-  const getProposals = async () => {
+  const getProposals = useCallback( async () => {
     if (block > 1) {
       const proposals = await gov.queryFilter("ProposalCreated", 8251080, block);
       try {
@@ -42,26 +50,40 @@ export default function Home() {
 
         if (proposals[0].args != undefined) {
           for( i; i < Number(proposals.length) ; i++) {
-            console.log("executed")
+            // console.log("executed:", String(proposals[i].args?.proposalId))
             proposalsRaw.push(...[{
               id: String(proposals[i].args?.proposalId), 
               link: baseUrl + String(proposals[i].args?.proposalId)
             }])
           }
-          setProposal(proposalsRaw)          
+          delete proposal[0];
+          setProposal(proposalsRaw);
+          // console.log("proposal post loop:", proposal);
+          setInitialized(true);
         }
       } catch(error) {
         console.log("error:", error)
       }
     }
-  }
+  },[block, proposal])
 
   useEffect(() => {
-    getBlock();
-    getManifesto();
     getProposals();
-    console.log("proposal:", proposal);
-  });
+    // console.log("proposal in useEffect:", proposal);
+
+  },[getProposals, proposal]);
+
+  function Item(props) {
+    return <p><strong><a style={{color:"#45a2f8"}} target="_blank" rel="noopener noreferrer" href = {props.link}>{props.id}</a></strong></p>
+  } 
+  
+  function List() {
+    return (
+      <div className={inter.className}>
+          {proposal.map((p) => <Item key={p.id} id={p.id} link={p.link} />)}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -90,17 +112,22 @@ export default function Home() {
             </a>
           </div>
         </div>
+
+        {initialized === true ? <>
         
         <div className={inter.className}>
   
           <p>Current block number: <strong>{block}</strong></p><br />
-          <p>Gov contract address: <strong><a target="_blank" rel="noopener noreferrer" href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
-          <p>Manifesto: <a target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/manifesto.md"><strong>{manifesto}</strong></a></p><br />
-          <h3>Latest proposal</h3><br />
-          <a target="_blank" rel="noopener noreferrer" href="https://www.tally.xyz/gov/girlygov-64/proposal/95129343070641600225540803920375046071595778808183352464012422526749827081032"><strong>95129343070641600225540803920375046071595778808183352464012422526749827081032</strong></a><br />
-          <br /><h3>All proposals </h3><br />
-          <p>...</p>        
-        </div>
+          <p>Gov contract address: <strong><a style={{color:"#45a2f8"}} target="_blank" rel="noopener noreferrer" href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
+          <p>Manifesto: <a style={{color:"#45a2f8"}} target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/manifesto.md"><strong>{manifesto}</strong></a></p><br />
+          
+          <h3>All proposals </h3><br />
+
+          <List />
+          
+        </div></>
+
+        : <Image src = {loader} alt="loader" priority={true}/> }
 
         <div className={styles.grid}>
           <Link
