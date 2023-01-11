@@ -48,14 +48,15 @@ export default function Home() {
 
         if (proposals[0].args != undefined) {
           for( i; i < Number(proposals.length) ; i++) {
-            console.log("executed:", String(proposals[i].args?.proposalId))
+            // console.log("executed:", String(proposals[i].args?.proposalId))
             proposalsRaw.push(...[{
               id: String(proposals[i].args?.proposalId), 
               link: baseUrl + String(proposals[i].args?.proposalId)
             }])
           }
+          delete proposal[0];
           setProposal(proposalsRaw);
-          console.log("proposal post loop:", proposal);
+          // console.log("proposal post loop:", proposal);
           setInitialized(true);
         }
       } catch(error) {
@@ -64,18 +65,23 @@ export default function Home() {
     }
   },[block, proposal])
 
-  // const List = useCallback( async () => {
-  //   return( <>
-  //     {proposal.map(() => <p key={1}><strong><a target="_blank" rel="noopener noreferrer" href = {proposal[1].link}>{proposal[1].id}</a></strong></p>)}
-  //     </>
-  //   )
-  // }
-
   useEffect(() => {
     getProposals();
+    // console.log("proposal in useEffect:", proposal);
+
   },[getProposals, proposal]);
 
+  function Item(props) {
+    return <p><strong><a target="_blank" rel="noopener noreferrer" href = {props.link}>{props.id}</a></strong></p>
+  } 
   
+  function List() {
+    return (
+      <div className={inter.className}>
+          {proposal.map((p) => <Item key={p.id} id={p.id} link={p.link} />)}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -110,24 +116,20 @@ export default function Home() {
           <p>Current block number: <strong>{block}</strong></p><br />
           <p>Gov contract address: <strong><a target="_blank" rel="noopener noreferrer" href="https://goerli.etherscan.io/address/0x690C775dD85365a0b288B30c338ca1E725abD50E#code">{contractAddress}</a></strong></p><br />
           <p>Manifesto: <a target="_blank" rel="noopener noreferrer" href="https://bafybeihmgfg2gmm23ozur3ylmkxgwkyr5dlpruivv3wjeujrdktxihqe3a.ipfs.w3s.link/manifesto.md"><strong>{manifesto}</strong></a></p><br />
-          <br /><h3>All proposals </h3><br />
+          
+          <h3>All proposals </h3>
 
           {initialized === true ? 
           
-
-          // <List />
-
           <div>
-          
-          <p><strong><a target="_blank" rel="noopener noreferrer" href = {proposal[1].link}>{proposal[1].id}</a></strong></p>
-          <p><strong><a target="_blank" rel="noopener noreferrer" href = {proposal[2].link}>{proposal[2].id}</a></strong></p>
-          <p><strong><a target="_blank" rel="noopener noreferrer" href = {proposal[3].link}>{proposal[3].id}</a></strong></p>
-          <p><strong><a target="_blank" rel="noopener noreferrer" href = {proposal[4].link}>{proposal[4].id}</a></strong></p>
-          {/* <p><strong><a target="_blank" rel="noopener noreferrer" href = {proposal[5].link}>{proposal[5].id}</a></strong></p> */}
+
+          <br /> 
+
+          <List />
 
           </div>
 
-          : <p>Not initialized yet</p>} 
+          : <p>Not initialized yet</p> } 
 
         </div>
 
