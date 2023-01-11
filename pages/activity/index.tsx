@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { ethers } from "ethers";
 import { useState, useEffect, useCallback } from "react";
 import { abi } from "../../constants/abi";
-import loader from '../../public/loader.svg';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -127,7 +126,7 @@ export default function Home() {
           
         </div></>
 
-        : <Image src = {loader} alt="loader" priority={true}/> }
+        : <p className={inter.className}>Loading...</p>}
 
         <div className={styles.grid}>
           <Link
